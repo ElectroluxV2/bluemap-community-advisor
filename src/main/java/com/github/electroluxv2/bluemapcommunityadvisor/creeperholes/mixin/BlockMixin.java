@@ -1,6 +1,6 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.mixin;
 
-import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.CreeperShameHoles;
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.ShameHoleCreator;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -14,6 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class BlockMixin {
     @Inject(at = @At("HEAD"), method = "onDestroyedByExplosion")
     private void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion, CallbackInfo ci) {
-        CreeperShameHoles.onBlockDestroyedByExplosion(explosion, pos);
+        ShameHoleCreator.onBlockDestroyedByExplosion(explosion, pos);
     }
 }

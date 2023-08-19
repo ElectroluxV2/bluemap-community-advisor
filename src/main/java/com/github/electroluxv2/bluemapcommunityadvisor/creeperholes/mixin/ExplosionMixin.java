@@ -1,7 +1,7 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.mixin;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.CreeperShameHoles;
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.ShameHoleCreator;
 import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.interfaces.ExplosionAccessors;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
@@ -26,12 +26,12 @@ public abstract class ExplosionMixin implements ExplosionAccessors {
 
     @Inject(at = @At("TAIL"), method = "collectBlocksAndDamageEntities")
     private void afterCollectBlocksAndDamageEntities(final CallbackInfo ci) {
-        CreeperShameHoles.afterExplosionCollectBlocks(world, (Explosion) (Object) this);
+        ShameHoleCreator.afterExplosionCollectBlocks(world, (Explosion) (Object) this);
     }
 
     @Inject(at = @At("TAIL"), method = "affectWorld")
     private void afterAffectWorld(final CallbackInfo ci) {
-        CreeperShameHoles.afterExplosionAffectWorld((Explosion) (Object) this);
+        ShameHoleCreator.afterExplosionAffectWorld((Explosion) (Object) this);
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils.CreeperExplodedBlock;
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils.Position;
+import net.minecraft.block.SnowBlock;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -10,9 +13,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor.LOGGER;
-import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.ShameHoleMarkerManager.createShameTag;
+import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.ShameHoleDataManager.saveHole;
+import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.ShameHoleMarkerManager.createShameMarker;
 
-public class CreeperShameHoles {
+public class ShameHoleCreator {
     private final static Map<CreeperEntity, List<String>> ignitionCulpritsMap = new HashMap<>();
     private final static Map<Explosion, Set<CreeperExplodedBlock>> affectedBlocksMap = new HashMap<>();
     private final static Map<Explosion, HashSet<BlockPos>> explodedBlocksMap = new HashMap<>();
@@ -50,6 +54,8 @@ public class CreeperShameHoles {
                 .getAffectedBlocks()
                 .stream()
                 .filter(pos -> !world.getBlockState(pos).isAir())
+                .filter(pos -> !(world.getBlockState(pos).getBlock() instanceof SnowBlock))
+                .filter(pos -> !world.getBlockState(pos).isReplaceable())
                 .map(pos -> new CreeperExplodedBlock(pos, world.getBlockState(pos)))
                 .collect(Collectors.toUnmodifiableSet());
 
@@ -103,6 +109,18 @@ public class CreeperShameHoles {
             return;
         }
 
-        createShameTag(ignitionCulprits, blocksDestroyedByCreeper, explosion);
+        final Runnable processing = () -> {
+            final var markerId = createShameMarker(ignitionCulprits, blocksDestroyedByCreeper, explosion);
+            final var list = blocksDestroyedByCreeper
+                    .stream()
+                    .map(CreeperExplodedBlock::asBlockPos)
+                    .map(Position::new)
+                    .collect(Collectors.toSet());
+
+            saveHole(markerId, list);
+        };
+
+        final var thread = new Thread(processing);
+        thread.start();
     }
 }

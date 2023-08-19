@@ -1,5 +1,6 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils.CreeperExplodedBlock;
 import de.bluecolored.bluemap.api.BlueMapAPI;
 import de.bluecolored.bluemap.api.BlueMapMap;
 import de.bluecolored.bluemap.api.gson.MarkerGson;
@@ -11,15 +12,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor.LOGGER;
+import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.CreeperHoles.configDirectory;
 
 public class ShameHoleMarkerManager {
     private static final String markerLabel = "Creeper hole by %s";
@@ -29,13 +27,6 @@ public class ShameHoleMarkerManager {
     private static final String markerSetKey = "creeper-holes-marker-set-%s";
     private static final String markerSetExtension = ".json5";
     private static final String markerSetKeyPrefix = markerSetKey.substring(0, markerSetKey.lastIndexOf("-") + 1);
-
-    private static final Path configDirectory = Paths
-            .get("")
-            .toAbsolutePath()
-            .resolve("config")
-            .resolve("bluemap-community-advisor")
-            .resolve("creeper-holes");
 
     public static void initialize() {
         try {
@@ -96,7 +87,7 @@ public class ShameHoleMarkerManager {
         }
     }
 
-    public static void createShameTag(final List<String> ignitionCulprits, final List<CreeperExplodedBlock> blocksDestroyedByCreeper, final Explosion explosion) {
+    public static String createShameMarker(final List<String> ignitionCulprits, final List<CreeperExplodedBlock> blocksDestroyedByCreeper, final Explosion explosion) {
         final var api = BlueMapAPI.getInstance().orElseThrow();
 
         final var blueMapWorld = api
@@ -113,6 +104,8 @@ public class ShameHoleMarkerManager {
                 .maxDistance(200)
                 .build();
 
+        final var markerId = markerKey.formatted(authors.hashCode(), markerPosition.hashCode());
+
         final var markerSet = blueMapWorld
                 .getMaps()
                 .stream()
@@ -123,12 +116,32 @@ public class ShameHoleMarkerManager {
                 .orElse(new MarkerSet(markerSetLabel));
 
         markerSet.getMarkers()
-                .put(markerKey.formatted(authors.hashCode(), markerPosition.hashCode()), marker);
+                .put(markerId, marker);
 
         blueMapWorld
                 .getMaps()
                 .stream()
                 .map(BlueMapMap::getMarkerSets)
                 .forEach(set -> set.put(markerSetKey.formatted(blueMapWorld.getId()), markerSet));
+
+        saveMarkerSets(BlueMapAPI.getInstance().orElseThrow());
+
+        return markerId;
+    }
+
+    public static void removeShameMarker(String markerId) {
+        final var api = BlueMapAPI.getInstance().orElseThrow();
+
+        for (final var world : api.getWorlds()) {
+            for (final var map : world.getMaps()) {
+                final var markerSet = map.getMarkerSets().get(markerSetKey.formatted(world.getId()));
+
+                if (markerSet == null) continue;
+
+                markerSet.remove(markerId);
+            }
+        }
+
+        saveMarkerSets(BlueMapAPI.getInstance().orElseThrow());
     }
 }

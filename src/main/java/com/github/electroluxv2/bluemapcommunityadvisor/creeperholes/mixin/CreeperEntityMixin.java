@@ -1,6 +1,6 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.mixin;
 
-import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.CreeperShameHoles;
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.ShameHoleCreator;
 import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.interfaces.CreeperAccessors;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -39,7 +39,7 @@ public abstract class CreeperEntityMixin extends MobEntity implements CreeperAcc
 
     @Inject(at = @At("HEAD"), method = "explode")
     private void onExplode(final CallbackInfo info) {
-        CreeperShameHoles.onCreeperExploded((CreeperEntity) (Object) this);
+        ShameHoleCreator.onCreeperExploded((CreeperEntity) (Object) this);
     }
 
     @Override
