@@ -5,37 +5,38 @@
 	"name": "bluemap-community-advisor",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
-		"Me!"
+		"Mateusz Budzisz"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/ElectroluxV2/bluemap-community-advisor"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/bluemap-community-advisor/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.github.electroluxv2.bluemapcommunityadvisor.ExampleMod"
-		],
-		"client": [
-			"com.github.electroluxv2.bluemapcommunityadvisor.ExampleModClient"
+          "com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor"
 		]
 	},
 	"mixins": [
-		"bluemap-community-advisor.mixins.json",
-		{
-			"config": "bluemap-community-advisor.client.mixins.json",
-			"environment": "client"
-		}
+		"bluemap-community-advisor.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.14.22",
 		"minecraft": "~1.20.1",
 		"java": ">=17",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"bluemap": ">=3.16"
 	},
-	"suggests": {
-		"another-mod": "*"
+	"custom": {
+		"loom:injected_interfaces": {
+			"net/minecraft/class_1548": [
+				"com/github/electroluxv2/bluemapcommunityadvisor/interfaces/CreeperAccessors"
+			],
+			"net/minecraft/class_1927": [
+				"com/github/electroluxv2/bluemapcommunityadvisor/interfaces/ExplosionAccessors"
+			]
+		}
 	}
 }
