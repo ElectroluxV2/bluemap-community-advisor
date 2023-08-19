@@ -1,11 +1,11 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
-import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils.CreeperExplodedBlock;
 import de.bluecolored.bluemap.api.BlueMapAPI;
 import de.bluecolored.bluemap.api.BlueMapMap;
 import de.bluecolored.bluemap.api.gson.MarkerGson;
 import de.bluecolored.bluemap.api.markers.MarkerSet;
 import de.bluecolored.bluemap.api.markers.POIMarker;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.explosion.Explosion;
 
 import java.io.FileReader;
@@ -13,7 +13,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Instant;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor.LOGGER;
@@ -87,7 +89,7 @@ public class ShameHoleMarkerManager {
         }
     }
 
-    public static String createShameMarker(final List<String> ignitionCulprits, final List<CreeperExplodedBlock> blocksDestroyedByCreeper, final Explosion explosion) {
+    public static String createShameMarker(final List<String> ignitionCulprits, final List<BlockPos> blocksDestroyedByCreeper, final Explosion explosion) {
         final var api = BlueMapAPI.getInstance().orElseThrow();
 
         final var blueMapWorld = api

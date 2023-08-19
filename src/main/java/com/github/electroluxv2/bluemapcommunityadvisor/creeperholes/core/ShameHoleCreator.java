@@ -1,6 +1,5 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
-import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils.CreeperExplodedBlock;
 import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils.Position;
 import net.minecraft.block.SnowBlock;
 import net.minecraft.entity.mob.CreeperEntity;
@@ -18,7 +17,7 @@ import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.
 
 public class ShameHoleCreator {
     private final static Map<CreeperEntity, List<String>> ignitionCulpritsMap = new HashMap<>();
-    private final static Map<Explosion, Set<CreeperExplodedBlock>> affectedBlocksMap = new HashMap<>();
+    private final static Map<Explosion, Set<BlockPos>> affectedBlocksMap = new HashMap<>();
     private final static Map<Explosion, HashSet<BlockPos>> explodedBlocksMap = new HashMap<>();
 
     /** Collect metadata for explosion */
@@ -56,7 +55,6 @@ public class ShameHoleCreator {
                 .filter(pos -> !world.getBlockState(pos).isAir())
                 .filter(pos -> !(world.getBlockState(pos).getBlock() instanceof SnowBlock))
                 .filter(pos -> !world.getBlockState(pos).isReplaceable())
-                .map(pos -> new CreeperExplodedBlock(pos, world.getBlockState(pos)))
                 .collect(Collectors.toUnmodifiableSet());
 
         affectedBlocksMap.put(explosion, nonAirExplodedBlocks);
@@ -92,10 +90,7 @@ public class ShameHoleCreator {
             return;
         }
 
-        final var affectedBlocksPositions = affectedBlocks
-                .stream()
-                .map(CreeperExplodedBlock::asBlockPos)
-                .collect(Collectors.toSet());
+        final var affectedBlocksPositions = new HashSet<>(affectedBlocks);
 
         // Make intersect to leave only exploded blocks
         affectedBlocksPositions.retainAll(explodedBlocks);
@@ -113,7 +108,6 @@ public class ShameHoleCreator {
             final var markerId = createShameMarker(ignitionCulprits, blocksDestroyedByCreeper, explosion);
             final var list = blocksDestroyedByCreeper
                     .stream()
-                    .map(CreeperExplodedBlock::asBlockPos)
                     .map(Position::new)
                     .collect(Collectors.toSet());
 
