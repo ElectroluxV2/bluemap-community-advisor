@@ -1,4 +1,4 @@
-package com.github.electroluxv2.bluemapcommunityadvisor.core;
+package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

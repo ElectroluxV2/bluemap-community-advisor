@@ -1,7 +1,7 @@
-package com.github.electroluxv2.bluemapcommunityadvisor.mixin;
+package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.mixin;
 
-import com.github.electroluxv2.bluemapcommunityadvisor.core.CreeperShameHoles;
-import com.github.electroluxv2.bluemapcommunityadvisor.interfaces.CreeperAccessors;
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.CreeperShameHoles;
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.interfaces.CreeperAccessors;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.CreeperEntity;

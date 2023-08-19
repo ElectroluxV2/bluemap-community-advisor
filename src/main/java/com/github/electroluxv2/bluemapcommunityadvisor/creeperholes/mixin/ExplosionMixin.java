@@ -1,8 +1,8 @@
-package com.github.electroluxv2.bluemapcommunityadvisor.mixin;
+package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.mixin;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.github.electroluxv2.bluemapcommunityadvisor.core.CreeperShameHoles;
-import com.github.electroluxv2.bluemapcommunityadvisor.interfaces.ExplosionAccessors;
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.CreeperShameHoles;
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.interfaces.ExplosionAccessors;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Final;

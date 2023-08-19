@@ -1,4 +1,4 @@
-package com.github.electroluxv2.bluemapcommunityadvisor.core;
+package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -7,17 +7,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor.LOGGER;
-import static com.github.electroluxv2.bluemapcommunityadvisor.core.ShameHoleMarkerManager.createShameTag;
+import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.ShameHoleMarkerManager.createShameTag;
 
 public class CreeperShameHoles {
     private final static Map<CreeperEntity, List<String>> ignitionCulpritsMap = new HashMap<>();
     private final static Map<Explosion, Set<CreeperExplodedBlock>> affectedBlocksMap = new HashMap<>();
     private final static Map<Explosion, HashSet<BlockPos>> explodedBlocksMap = new HashMap<>();
-    private static final AtomicInteger id = new AtomicInteger(0);
 
     /** Collect metadata for explosion */
     public static void onCreeperExploded(final CreeperEntity creeperEntity) {

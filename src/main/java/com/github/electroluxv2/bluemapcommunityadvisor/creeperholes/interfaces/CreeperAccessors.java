@@ -1,4 +1,4 @@
-package com.github.electroluxv2.bluemapcommunityadvisor.interfaces;
+package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.interfaces;
 
 import java.util.Optional;
 

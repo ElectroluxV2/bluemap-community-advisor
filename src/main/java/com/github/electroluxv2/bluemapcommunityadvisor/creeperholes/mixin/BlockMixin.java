@@ -1,6 +1,6 @@
-package com.github.electroluxv2.bluemapcommunityadvisor.mixin;
+package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.mixin;
 
-import com.github.electroluxv2.bluemapcommunityadvisor.core.CreeperShameHoles;
+import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.CreeperShameHoles;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

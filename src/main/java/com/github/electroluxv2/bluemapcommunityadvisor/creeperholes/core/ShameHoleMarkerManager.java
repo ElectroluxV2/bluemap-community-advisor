@@ -1,4 +1,4 @@
-package com.github.electroluxv2.bluemapcommunityadvisor.core;
+package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
 import de.bluecolored.bluemap.api.BlueMapAPI;
 import de.bluecolored.bluemap.api.BlueMapMap;
@@ -6,9 +6,7 @@ import de.bluecolored.bluemap.api.gson.MarkerGson;
 import de.bluecolored.bluemap.api.markers.MarkerSet;
 import de.bluecolored.bluemap.api.markers.POIMarker;
 import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.gen.chunk.Blender;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;

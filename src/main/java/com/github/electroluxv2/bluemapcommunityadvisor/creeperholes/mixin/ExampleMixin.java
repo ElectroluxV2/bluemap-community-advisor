@@ -1,4 +1,4 @@
-package com.github.electroluxv2.bluemapcommunityadvisor.mixin;
+package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

@@ -32,10 +32,10 @@
 	"custom": {
 		"loom:injected_interfaces": {
 			"net/minecraft/class_1548": [
-				"com/github/electroluxv2/bluemapcommunityadvisor/interfaces/CreeperAccessors"
+				"com/github/electroluxv2/bluemapcommunityadvisor/creeperholes/interfaces/CreeperAccessors"
 			],
 			"net/minecraft/class_1927": [
-				"com/github/electroluxv2/bluemapcommunityadvisor/interfaces/ExplosionAccessors"
+				"com/github/electroluxv2/bluemapcommunityadvisor/creeperholes/interfaces/ExplosionAccessors"
 			]
 		}
 	}
