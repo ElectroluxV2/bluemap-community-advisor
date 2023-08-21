@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor.LOGGER;
@@ -75,6 +76,16 @@ public class ShameHoleDataManager {
         return positionToMarkerIds.containsKey(position)
                 ? Optional.of(positionToMarkerIds.get(position))
                 : Optional.empty();
+    }
+
+    public static Set<String> getMarkersInDistance(final Position position, final double distance) {
+        return positionToMarkerIds
+                .entrySet()
+                .stream()
+                .filter(x -> x.getKey().calculateEuclideanDistance(position) < distance)
+                .map(Map.Entry::getValue)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
     }
 
     public static Set<Position> getPositionsForMarkerId(final String markerId) {

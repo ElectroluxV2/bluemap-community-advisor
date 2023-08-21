@@ -1,15 +1,16 @@
 {
-	"required": true,
-	"package": "com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.mixin",
-	"compatibilityLevel": "JAVA_17",
-	"mixins": [
-		"BlockItemMixin",
-		"BlockMixin",
-		"CreeperEntityMixin",
-		"ExampleMixin",
-		"ExplosionMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BlockItemMixin",
+    "BlockMixin",
+    "CreeperEntityMixin",
+    "ExampleMixin",
+    "ExplosionMixin",
+    "PlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }

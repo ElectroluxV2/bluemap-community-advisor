@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BlockItemMixin {
     @Inject(at = @At("TAIL"), method = "place(Lnet/minecraft/item/ItemPlacementContext;)Lnet/minecraft/util/ActionResult;")
     private void onPlace(ItemPlacementContext context, CallbackInfoReturnable<ActionResult> cir) {
-        final Runnable logic = () -> ShameHoleRemover.onBlockPlaced(new Position(context.getBlockPos()));
+        final Runnable logic = () -> ShameHoleRemover.onBlockPlaced(new Position(context.getBlockPos()), context.getPlayer());
         final var thread = new Thread(logic);
 
         thread.start();

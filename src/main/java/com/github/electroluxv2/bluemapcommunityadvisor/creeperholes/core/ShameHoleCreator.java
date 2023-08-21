@@ -55,6 +55,7 @@ public class ShameHoleCreator {
                 .filter(pos -> !world.getBlockState(pos).isAir())
                 .filter(pos -> !(world.getBlockState(pos).getBlock() instanceof SnowBlock))
                 .filter(pos -> !world.getBlockState(pos).isReplaceable())
+                .filter(pos -> world.getBlockState(pos).getBlock().getBlastResistance() >= 0.5)
                 .collect(Collectors.toUnmodifiableSet());
 
         affectedBlocksMap.put(explosion, nonAirExplodedBlocks);
