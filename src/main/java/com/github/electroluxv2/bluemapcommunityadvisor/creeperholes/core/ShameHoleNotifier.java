@@ -11,7 +11,7 @@ public class ShameHoleNotifier {
         if (markerIdsWithinPosition.isEmpty()) return;
 
         for (final var markerId : markerIdsWithinPosition) {
-            final var size = ShameHoleDataManager.getPositionsForMarkerId(markerId).size();
+            final var size = ShameHoleDataManager.getShameHoleForMarkerId(markerId).positions().size();
             playerEntity.sendMessage(createAlternatingProgressBar(size), true);
             break; // Too lazy to remove this loop, it is stupid that set has no first() or root()
         }

@@ -112,7 +112,7 @@ public class ShameHoleCreator {
                     .map(Position::new)
                     .collect(Collectors.toSet());
 
-            saveHole(markerId, list);
+            saveHole(markerId, new ShameHole(list.size(), list));
         };
 
         final var thread = new Thread(processing);

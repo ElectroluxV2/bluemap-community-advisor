@@ -2,7 +2,6 @@ package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
 import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils.DebouncedRunnable;
 import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils.Position;
-import com.google.gson.reflect.TypeToken;
 import de.bluecolored.bluemap.api.gson.MarkerGson;
 
 import java.io.FileReader;
@@ -18,7 +17,7 @@ import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.Creep
 
 public class ShameHoleDataManager {
     private static final ConcurrentHashMap<Position, HashSet<String>> positionToMarkerIds = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<String, Set<Position>> markerIdsToPositions = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, ShameHole> markerIdsToShameHoles = new ConcurrentHashMap<>();
 
     private static final HashMap<String, DebouncedRunnable> pendingSaves = new HashMap<>();
 
@@ -34,10 +33,10 @@ public class ShameHoleDataManager {
             final var markerId = filename.substring("hole-".length(), filename.lastIndexOf(".json5"));
 
             try (final var reader = new FileReader(holeFile)) {
-                final Set<Position> positions = MarkerGson.INSTANCE.fromJson(reader, new TypeToken<Set<Position>>(){}.getType());
+                final ShameHole shameHole = MarkerGson.INSTANCE.fromJson(reader, ShameHole.class);
 
-                markerIdsToPositions.put(markerId, positions);
-                for (final var position : positions) {
+                markerIdsToShameHoles.put(markerId, shameHole);
+                for (final var position : shameHole.positions()) {
                     positionToMarkerIds.computeIfAbsent(position, x -> new HashSet<>());
                     positionToMarkerIds.get(position).add(markerId);
                 }
@@ -49,20 +48,20 @@ public class ShameHoleDataManager {
         }
     }
 
-    public static void saveHole(final String markerId, final Set<Position> positions) {
+    public static void saveHole(final String markerId, final ShameHole shameHole) {
         final var file = configDirectory
                 .resolve("hole-%s.json5".formatted(markerId))
                 .toFile();
 
-        markerIdsToPositions.put(markerId, positions);
-        for (final var position : positions) {
+        markerIdsToShameHoles.put(markerId, shameHole);
+        for (final var position : shameHole.positions()) {
             positionToMarkerIds.computeIfAbsent(position, x -> new HashSet<>());
             positionToMarkerIds.get(position).add(markerId);
         }
 
         pendingSaves.computeIfAbsent(markerId, x -> new DebouncedRunnable(() -> {
             try (final var writer = new FileWriter(file)) {
-                MarkerGson.INSTANCE.toJson(positions, writer);
+                MarkerGson.INSTANCE.toJson(shameHole, writer);
                 LOGGER.info("Saved hole for marker: %s".formatted(markerId));
             } catch (IOException ex) {
                 LOGGER.error("Failed to save hole for marker: %s".formatted(markerId), ex);
@@ -88,12 +87,12 @@ public class ShameHoleDataManager {
                 .collect(Collectors.toSet());
     }
 
-    public static Set<Position> getPositionsForMarkerId(final String markerId) {
-        return markerIdsToPositions.get(markerId);
+    public static ShameHole getShameHoleForMarkerId(final String markerId) {
+        return markerIdsToShameHoles.get(markerId);
     }
 
     public static void deleteHole(String markerId) {
-        markerIdsToPositions.remove(markerId);
+        markerIdsToShameHoles.remove(markerId);
 
         positionToMarkerIds.entrySet().removeIf(entry -> {
             entry.getValue().remove(markerId);

@@ -13,18 +13,18 @@ public class ShameHoleRemover {
 
 
         for (final var markerId : markerIdsWithinPosition.get()) {
-            final var positions = ShameHoleDataManager.getPositionsForMarkerId(markerId);
+            final var shameHole = ShameHoleDataManager.getShameHoleForMarkerId(markerId);
 
-            if (!positions.contains(position)) {
+            if (!shameHole.positions().contains(position)) {
                 continue;
             }
 
-            positions.remove(position);
+            shameHole.positions().remove(position);
 
-            player.sendMessage(createAlternatingProgressBar(positions.size()), true);
+            player.sendMessage(createAlternatingProgressBar(shameHole.positions().size()), true);
 
-            if (positions.size() > 3) {
-                ShameHoleDataManager.saveHole(markerId, positions);
+            if (((double) shameHole.originalSize() - shameHole.positions().size()) / shameHole.originalSize() <= 0.8) {
+                ShameHoleDataManager.saveHole(markerId, shameHole);
                 continue;
             }
 
