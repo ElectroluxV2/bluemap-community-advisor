@@ -77,7 +77,8 @@ public class ShameHoleCreator {
         final var explodedBlocks = explodedBlocksMap.getOrDefault(explosion, new HashSet<>());
         explodedBlocksMap.remove(explosion);
 
-        final var creeperEntity = (CreeperEntity) explosion.getEntity();
+        if (!(explosion.getEntity() instanceof final CreeperEntity creeperEntity)) return;
+
         final var ignitionCulprits = ignitionCulpritsMap.get(creeperEntity);
         ignitionCulpritsMap.remove(creeperEntity);
 
