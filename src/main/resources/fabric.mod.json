@@ -20,7 +20,8 @@
 		]
 	},
 	"mixins": [
-		"bluemap-community-advisor.mixins.json"
+		"bluemap-community-advisor.mixins.json",
+		"bluemap-community-advisor-spawnermarker.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.14.22",

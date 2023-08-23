@@ -1,6 +1,7 @@
 package com.github.electroluxv2.bluemapcommunityadvisor;
 
 import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.CreeperHoles;
+import com.github.electroluxv2.bluemapcommunityadvisor.spawnermarker.SpawnerMarker;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -19,5 +20,6 @@ public class BlueMapCommunityAdvisor implements ModInitializer {
 		// Proceed with mild caution.
 		LOGGER.info("Hello Fabric world!");
 		CreeperHoles.initialize();
+		SpawnerMarker.initialize();
 	}
 }
