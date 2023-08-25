@@ -20,7 +20,7 @@
 		]
 	},
 	"mixins": [
-		"bluemap-community-advisor.mixins.json",
+		"bluemap-community-advisor-creeperholes.mixins.json",
 		"bluemap-community-advisor-spawnermarker.mixins.json"
 	],
 	"depends": {
@@ -37,6 +37,9 @@
 			],
 			"net/minecraft/class_1927": [
 				"com/github/electroluxv2/bluemapcommunityadvisor/creeperholes/interfaces/ExplosionAccessors"
+			],
+			"net/minecraft/class_2496": [
+				"com/github/electroluxv2/bluemapcommunityadvisor/spawnermarker/interfaces/SpawnerBlockAccessors"
 			]
 		}
 	}
