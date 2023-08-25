@@ -20,7 +20,7 @@
 		]
 	},
 	"mixins": [
-		"bluemap-community-advisor.mixins.json",
+		"bluemap-community-advisor-creeperholes.mixins.json",
 		"bluemap-community-advisor-spawnermarker.mixins.json"
 	],
 	"depends": {
