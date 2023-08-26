@@ -8,6 +8,7 @@ import de.bluecolored.bluemap.api.BlueMapMap;
 import de.bluecolored.bluemap.api.gson.MarkerGson;
 import de.bluecolored.bluemap.api.markers.MarkerSet;
 import de.bluecolored.bluemap.api.markers.POIMarker;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.explosion.Explosion;
 
@@ -27,7 +28,7 @@ import static com.github.electroluxv2.bluemapcommunityadvisor.spawnermarker.Spaw
 public class SpawnerMarkerManager {
     private static final String markerLabel = "%s spawner";
     private static final String markerDetail = "%s spawner, found by %s";
-    private static final String markerKey = "spawner-marker-%d-%d";
+    private static final String markerKey = "spawner-marker-%d";
     private static final String markerSetLabel = "Spawners";
     private static final String markerSetKey = "spawners-marker-set-%s";
     private static final String markerSetExtension = ".json5";
@@ -92,25 +93,12 @@ public class SpawnerMarkerManager {
         }
     }
 
-    public static String createSpawnerMarker(Spawner spawner) {
+    public static boolean createSpawnerMarker(Spawner spawner) {
         final var api = BlueMapAPI.getInstance().orElseThrow();
 
         final var blueMapWorld = api
                 .getWorld(Objects.requireNonNull(spawner.finder()).getWorld())
                 .orElseThrow();
-
-        final String finder = spawner.finder().getName().getString();
-        final var markerPosition = new Vector3d(spawner.x(), spawner.y(), spawner.z());
-
-        final var marker = POIMarker.builder()
-                .label(markerLabel.formatted(spawner.type()))
-                .detail(markerDetail.formatted(spawner.type(), finder))
-                .position(markerPosition)
-                .maxDistance(200)
-                .icon("assets/spawner.webp", new Vector2i(0, 0))
-                .build();
-
-        final var markerId = markerKey.formatted(finder.hashCode(), markerPosition.hashCode());
 
         final var markerSet = blueMapWorld
                 .getMaps()
@@ -120,6 +108,25 @@ public class SpawnerMarkerManager {
                 .map(Map.Entry::getValue)
                 .findFirst()
                 .orElse(new MarkerSet(markerSetLabel));
+
+        final String finder = spawner.finder().getName().getString();
+        final var markerPosition = new Vector3d(spawner.x(), spawner.y(), spawner.z());
+        var label = spawner.type().get(0).getString();
+        label = label.isEmpty() ? "Empty" : label;
+
+        final var marker = POIMarker.builder()
+                .label(markerLabel.formatted(label))
+                .detail(markerDetail.formatted(spawner.type(), finder))
+                .position(markerPosition)
+                .maxDistance(200)
+                .icon("assets/spawner.webp", new Vector2i(0, 0))
+                .build();
+
+        final var markerId = markerKey.formatted(markerPosition.hashCode());
+
+        if(markerSet.getMarkers().containsKey(markerId)){
+            return false;
+        }
 
         markerSet.getMarkers()
                 .put(markerId, marker);
@@ -132,7 +139,7 @@ public class SpawnerMarkerManager {
 
         saveMarkerSets(BlueMapAPI.getInstance().orElseThrow());
 
-        return markerId;
+        return true;
     }
 
 }
