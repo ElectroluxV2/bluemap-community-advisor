@@ -8,16 +8,13 @@ import de.bluecolored.bluemap.api.BlueMapMap;
 import de.bluecolored.bluemap.api.gson.MarkerGson;
 import de.bluecolored.bluemap.api.markers.MarkerSet;
 import de.bluecolored.bluemap.api.markers.POIMarker;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.explosion.Explosion;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.Instant;
-import java.util.List;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -27,7 +24,7 @@ import static com.github.electroluxv2.bluemapcommunityadvisor.spawnermarker.Spaw
 
 public class SpawnerMarkerManager {
     private static final String markerLabel = "%s spawner";
-    private static final String markerDetail = "%s spawner, found by %s";
+    private static final String markerDetail = "%s spawner, found by %s on %s";
     private static final String markerKey = "spawner-marker-%d";
     private static final String markerSetLabel = "Spawners";
     private static final String markerSetKey = "spawners-marker-set-%s";
@@ -113,10 +110,13 @@ public class SpawnerMarkerManager {
         final var markerPosition = new Vector3d(spawner.x(), spawner.y(), spawner.z());
         var label = spawner.type().get(0).getString();
         label = label.isEmpty() ? "Empty" : label;
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE.withZone(ZoneId.from(ZoneOffset.UTC));
+        String dateOfDiscovery = dateFormatter.format(spawner.timeOfDiscovery());
+        dateOfDiscovery = dateOfDiscovery.substring(0, dateOfDiscovery.length()-1);
 
         final var marker = POIMarker.builder()
                 .label(markerLabel.formatted(label))
-                .detail(markerDetail.formatted(spawner.type(), finder))
+                .detail(markerDetail.formatted(label, finder, dateOfDiscovery))
                 .position(markerPosition)
                 .maxDistance(200)
                 .icon("assets/spawner.webp", new Vector2i(0, 0))

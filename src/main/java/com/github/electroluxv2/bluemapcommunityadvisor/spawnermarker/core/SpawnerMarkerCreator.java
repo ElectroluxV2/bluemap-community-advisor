@@ -4,21 +4,16 @@ import net.minecraft.block.SpawnerBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -88,7 +83,7 @@ public class SpawnerMarkerCreator {
         final var tooltipText = new ArrayList<Text>();
         spawnerBlock.appendTooltip(spawnerItemStack, player.getWorld(), tooltipText, TooltipContext.ADVANCED);
 
-        final var spawnerData = new Spawner(spawnerBlockPos.getX(), spawnerBlockPos.getY(), spawnerBlockPos.getZ(), player, tooltipText);
+        final var spawnerData = new Spawner(spawnerBlockPos.getX(), spawnerBlockPos.getY(), spawnerBlockPos.getZ(), player, tooltipText, Instant.now());
         final var isCreated = SpawnerMarkerManager.createSpawnerMarker(spawnerData);
 
         if(isCreated) {
