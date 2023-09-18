@@ -6,4 +6,4 @@ import net.minecraft.text.Text;
 import java.time.Instant;
 import java.util.List;
 
-public record Spawner(int x, int y, int z, PlayerEntity finder, List<Text> type, Instant timeOfDiscovery) {}
+public record Spawner(double x, double y, double z, PlayerEntity finder, List<Text> type, Instant timeOfDiscovery) {}

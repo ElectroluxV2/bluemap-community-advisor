@@ -12,7 +12,7 @@
 		"sources": "https://github.com/ElectroluxV2/bluemap-community-advisor"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/bluemap-community-advisor/icon.png",
+	"icon": "blue-map-community-advisor-assets/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"server": [

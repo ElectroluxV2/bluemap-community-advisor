@@ -42,6 +42,7 @@ public class SpawnerMarkerCreator {
 
         final var rayCastBlockPos = BlockPos.ofFloored(result.getPos());
 
+        // Check all siblings to the ray-cast hit, as ray-casting is not precise enough
         final var blockPoses = List.of(
             rayCastBlockPos,
             rayCastBlockPos.down(),
@@ -81,7 +82,9 @@ public class SpawnerMarkerCreator {
         final var tooltipText = new ArrayList<Text>();
         spawnerBlock.appendTooltip(spawnerItemStack, player.getWorld(), tooltipText, TooltipContext.ADVANCED);
 
-        final var spawnerData = new Spawner(spawnerBlockPos.getX(), spawnerBlockPos.getY(), spawnerBlockPos.getZ(), player, tooltipText, Instant.now());
+        final var center = spawnerBlockPos.toCenterPos();
+
+        final var spawnerData = new Spawner(center.getX(), center.getY(), center.getZ(), player, tooltipText, Instant.now());
         final var isCreated = SpawnerMarkerManager.createSpawnerMarker(spawnerData);
 
         if (isCreated) {

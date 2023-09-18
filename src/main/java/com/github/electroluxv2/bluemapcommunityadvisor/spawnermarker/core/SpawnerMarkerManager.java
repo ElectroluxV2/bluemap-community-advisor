@@ -30,6 +30,8 @@ public class SpawnerMarkerManager {
     private static final String markerSetKey = "spawners-marker-set-%s";
     private static final String markerSetExtension = ".json5";
     private static final String markerSetKeyPrefix = markerSetKey.substring(0, markerSetKey.lastIndexOf("-") + 1);
+    private static final String SPAWNER_ICON = "assets/bmca/spawner.avif";
+
     public static void initialize() {
         try {
             Files.createDirectories(configDirectory);
@@ -119,7 +121,7 @@ public class SpawnerMarkerManager {
                 .detail(markerDetail.formatted(label, finder, dateOfDiscovery))
                 .position(markerPosition)
                 .maxDistance(200)
-                .icon("assets/spawner.webp", new Vector2i(0, 0))
+                .icon(SPAWNER_ICON, new Vector2i(32, 32))
                 .build();
 
         final var markerId = markerKey.formatted(markerPosition.hashCode());
