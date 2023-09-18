@@ -3,11 +3,16 @@ package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils.Position;
 import net.minecraft.entity.player.PlayerEntity;
 
+import static com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor.EXECUTOR;
 import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.TextFactory.createAlternatingProgressBar;
 import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.TextFactory.createConfirm;
 
 public class ShameHoleRemover {
     public static void onBlockPlaced(final Position position, final PlayerEntity player) {
+        EXECUTOR.execute(() -> logic(position, player));
+    }
+
+    private static void logic(final Position position, final PlayerEntity player) {
         final var markerIdsWithinPosition = ShameHoleDataManager.getMarkerIdsForPosition(position);
         if (markerIdsWithinPosition.isEmpty()) return;
 

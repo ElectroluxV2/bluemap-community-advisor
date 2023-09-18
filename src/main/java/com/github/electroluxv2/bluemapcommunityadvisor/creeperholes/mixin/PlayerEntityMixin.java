@@ -20,7 +20,7 @@ public abstract class PlayerEntityMixin extends Entity {
     @Unique
     private static final int threshold = 50;
     @Unique
-    private static final AtomicLong tickCounter = new AtomicLong(0);
+    private final AtomicLong tickCounter = new AtomicLong(0);
 
     public PlayerEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -32,7 +32,6 @@ public abstract class PlayerEntityMixin extends Entity {
         // noinspection ConstantConditions
         if (!((Object) this instanceof ServerPlayerEntity playerEntity)) return;
 
-        final var thread = new Thread(() -> ShameHoleNotifier.notifyPlayerAboutNearbyHoles(new Position(this.getBlockPos()), playerEntity));
-        thread.start(); // I don't give a fuck if it fails
+        ShameHoleNotifier.notifyPlayerAboutNearbyHoles(new Position(this.getBlockPos()), playerEntity);
     }
 }

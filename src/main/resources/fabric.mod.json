@@ -15,7 +15,7 @@
 	"icon": "assets/bluemap-community-advisor/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
+		"server": [
           "com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor"
 		]
 	},

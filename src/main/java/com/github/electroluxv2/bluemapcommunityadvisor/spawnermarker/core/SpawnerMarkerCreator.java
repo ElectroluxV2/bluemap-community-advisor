@@ -15,16 +15,14 @@ import net.minecraft.util.math.BlockPos;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
+import static com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor.EXECUTOR;
 import static com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor.LOGGER;
 
 public class SpawnerMarkerCreator {
-    private static final Executor executor = Executors.newCachedThreadPool();
 
     public static void onPlayerTick(final ServerPlayerEntity playerEntity, final float tickDelta) {
-        executor.execute(() -> tryToCreateSpawnerMarker(playerEntity, tickDelta));
+        EXECUTOR.execute(() -> tryToCreateSpawnerMarker(playerEntity, tickDelta));
     }
 
     private static void tryToCreateSpawnerMarker(final PlayerEntity player, float tickDelta) {
@@ -73,7 +71,7 @@ public class SpawnerMarkerCreator {
             return;
         }
 
-        NbtCompound spawnerNbtData = new NbtCompound();
+        final var spawnerNbtData = new NbtCompound();
         mobSpawnerBlockEntity.getLogic().writeNbt(spawnerNbtData);
 
         final var spawnerItemStack = new ItemStack(spawnerBlock);
@@ -86,7 +84,7 @@ public class SpawnerMarkerCreator {
         final var spawnerData = new Spawner(spawnerBlockPos.getX(), spawnerBlockPos.getY(), spawnerBlockPos.getZ(), player, tooltipText, Instant.now());
         final var isCreated = SpawnerMarkerManager.createSpawnerMarker(spawnerData);
 
-        if(isCreated) {
+        if (isCreated) {
             player.sendMessage(Text.of("Spawner found"), true);
         }
     }
