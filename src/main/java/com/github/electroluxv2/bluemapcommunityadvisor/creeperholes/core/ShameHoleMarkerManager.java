@@ -1,12 +1,14 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
+import com.flowpowered.math.vector.Vector3d;
+import com.github.electroluxv2.bluemapcommunityadvisor.spawnermarker.mixin.ExplosionAccessor;
 import de.bluecolored.bluemap.api.BlueMapAPI;
 import de.bluecolored.bluemap.api.BlueMapMap;
 import de.bluecolored.bluemap.api.gson.MarkerGson;
 import de.bluecolored.bluemap.api.markers.MarkerSet;
 import de.bluecolored.bluemap.api.markers.POIMarker;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.explosion.Explosion;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Explosion;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -93,11 +95,13 @@ public class ShameHoleMarkerManager {
         final var api = BlueMapAPI.getInstance().orElseThrow();
 
         final var blueMapWorld = api
-                .getWorld(Objects.requireNonNull(explosion.getEntity()).getWorld())
+                .getWorld(Objects.requireNonNull(explosion.getDirectSourceEntity()).level())
                 .orElseThrow();
 
         final var authors = String.join(", ", ignitionCulprits);
-        final var markerPosition = explosion.bluemap_community_advisor$getVector3d().orElseThrow();
+
+        final var ex = (ExplosionAccessor) explosion;
+        final var markerPosition = new Vector3d(ex.getX(), ex.getY(), ex.getZ());
 
         final var marker = POIMarker.builder()
                 .label(markerLabel.formatted(authors))

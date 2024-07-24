@@ -1,17 +1,16 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.spawnermarker.core;
 
-import net.minecraft.block.SpawnerBlock;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.MobSpawnerBlockEntity;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
+import com.github.electroluxv2.bluemapcommunityadvisor.spawnermarker.mixin.BaseSpawnerAccessor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.SpawnerBlock;
+import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.util.*;
@@ -21,32 +20,27 @@ import static com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAd
 
 public class SpawnerMarkerCreator {
 
-    public static void onPlayerTick(final ServerPlayerEntity playerEntity, final float tickDelta) {
+    public static void onPlayerTick(final ServerPlayer playerEntity, final float tickDelta) {
         EXECUTOR.execute(() -> tryToCreateSpawnerMarker(playerEntity, tickDelta));
     }
 
-    private static void tryToCreateSpawnerMarker(final PlayerEntity player, float tickDelta) {
-        final var chunkPos = player.getChunkPos();
-        final var blockView = player.getWorld().getChunkAsView(chunkPos.x, chunkPos.z);
+    private static void tryToCreateSpawnerMarker(final @NotNull Player player, float tickDelta) {
+        final var chunkPos = player.chunkPosition();
+        final var blockView = player.level().getChunk(chunkPos.x, chunkPos.z);
 
-        if (blockView == null) {
-            LOGGER.warn("Failed to get BlockView for %s".formatted(chunkPos.toString()));
-            return;
-        }
-
-        final var result = player.raycast(5, tickDelta, false);
+        final var result = player.pick(5, tickDelta, false);
 
         if (result.getType().equals(HitResult.Type.MISS)) {
             return;
         }
 
-        final var rayCastBlockPos = BlockPos.ofFloored(result.getPos());
+        final var rayCastBlockPos = BlockPos.containing(result.getLocation());
 
         // Check all siblings to the ray-cast hit, as ray-casting is not precise enough
         final var blockPoses = List.of(
             rayCastBlockPos,
-            rayCastBlockPos.down(),
-            rayCastBlockPos.up(),
+            rayCastBlockPos.below(),
+            rayCastBlockPos.above(),
             rayCastBlockPos.north(),
             rayCastBlockPos.east(),
             rayCastBlockPos.west(),
@@ -61,34 +55,24 @@ public class SpawnerMarkerCreator {
         if (spawnerBlockPosOptional.isEmpty()) return;
 
         final var spawnerBlockPos = spawnerBlockPosOptional.get();
-
-        final var spawnerBlock = (SpawnerBlock) blockView.getBlockState(spawnerBlockPos).getBlock();
-
-        final var mobSpawnerBlockEntity = (MobSpawnerBlockEntity) blockView.getBlockEntity(spawnerBlockPos);
-
+        final var mobSpawnerBlockEntity = (SpawnerBlockEntity) blockView.getBlockEntity(spawnerBlockPos);
 
         if (mobSpawnerBlockEntity == null) {
             LOGGER.warn("Failed to read mob spawner block entity");
             return;
         }
 
-        final var spawnerNbtData = new NbtCompound();
-        mobSpawnerBlockEntity.getLogic().writeNbt(spawnerNbtData);
+        var spawnData = ((BaseSpawnerAccessor) mobSpawnerBlockEntity.getSpawner()).getNextSpawnData();
+        var id = spawnData.getEntityToSpawn().getString("id");
+        var description = EntityType.byString(id).orElseThrow().getDescription();
 
-        final var spawnerItemStack = new ItemStack(spawnerBlock);
+        final var center = spawnerBlockPos.getCenter();
 
-        BlockItem.setBlockEntityNbt(spawnerItemStack, BlockEntityType.MOB_SPAWNER, spawnerNbtData);
-
-        final var tooltipText = new ArrayList<Text>();
-        spawnerBlock.appendTooltip(spawnerItemStack, player.getWorld(), tooltipText, TooltipContext.ADVANCED);
-
-        final var center = spawnerBlockPos.toCenterPos();
-
-        final var spawnerData = new Spawner(center.getX(), center.getY(), center.getZ(), player, tooltipText, Instant.now());
+        final var spawnerData = new Spawner(center.x, center.y, center.z, player, description, Instant.now());
         final var isCreated = SpawnerMarkerManager.createSpawnerMarker(spawnerData);
 
         if (isCreated) {
-            player.sendMessage(Text.of("Spawner found"), true);
+            player.displayClientMessage(Component.literal("Spawner found").append(CommonComponents.space()).append(description), true);
         }
     }
 }

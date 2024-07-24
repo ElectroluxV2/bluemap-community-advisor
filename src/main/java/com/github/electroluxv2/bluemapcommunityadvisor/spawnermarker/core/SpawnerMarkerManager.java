@@ -96,7 +96,7 @@ public class SpawnerMarkerManager {
         final var api = BlueMapAPI.getInstance().orElseThrow();
 
         final var blueMapWorld = api
-                .getWorld(Objects.requireNonNull(spawner.finder()).getWorld())
+                .getWorld(Objects.requireNonNull(spawner.finder()).level())
                 .orElseThrow();
 
         final var markerSet = blueMapWorld
@@ -110,7 +110,7 @@ public class SpawnerMarkerManager {
 
         final String finder = spawner.finder().getName().getString();
         final var markerPosition = new Vector3d(spawner.x(), spawner.y(), spawner.z());
-        var label = spawner.type().get(0).getString();
+        var label = spawner.type().getString(2137);
         label = label.isEmpty() ? "Empty" : label;
         DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_DATE.withZone(ZoneId.from(ZoneOffset.UTC));
         String dateOfDiscovery = dateFormatter.format(spawner.timeOfDiscovery());

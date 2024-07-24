@@ -1,6 +1,7 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils;
 
-import net.minecraft.util.math.BlockPos;
+
+import net.minecraft.core.BlockPos;
 
 public record Position(double x, double y, double z) {
     public Position(BlockPos blockPos) {

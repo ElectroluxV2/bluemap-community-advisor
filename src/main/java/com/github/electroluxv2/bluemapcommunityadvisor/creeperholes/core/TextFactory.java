@@ -1,50 +1,27 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
-import net.minecraft.text.Text;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 
-import java.util.StringJoiner;
-
+@SuppressWarnings("DataFlowIssue")
 public class TextFactory {
-    private record TextBuilder(StringJoiner segments) {
-        public static TextBuilder of(final String text, final String color) {
-                return new TextBuilder(new StringJoiner(",")).with(text, color);
-        }
-
-        public TextBuilder with(final String text, final String color) {
-            segments.add(colored(text, color));
-            return this;
-        }
-
-        public Text build() {
-            return fromJsonSegments(segments.toString());
-        }
-
-        private static Text fromJsonSegments(final String segments) {
-            return Text.Serializer.fromJson("[%s]".formatted(segments));
-        }
-
-        private static String colored(final String text, final String color) {
-            return "{\"text\":\"%s\",\"color\":\"%s\"}".formatted(text, color);
-        }
-    }
-
-    public static Text createAlternatingProgressBar(final int total) {
-        final var text = TextBuilder.of("[ ", "red");
+    public static Component createAlternatingProgressBar(final int total) {
+        final var text = Component.literal("[ ").withColor(ChatFormatting.RED.getColor());
 
         for (int i = 0; i < total; i++) {
             final var color = i % 2 == 0
-                    ? "dark_green"
-                    : "green";
+                ? ChatFormatting.DARK_GREEN.getColor()
+                : ChatFormatting.GREEN.getColor();
 
-            text.with("|", color);
+            text.append(Component.literal("|").withColor(color));
         }
 
-        text.with(" ]", "red");
+        text.append(Component.literal(" ]").withColor(ChatFormatting.RED.getColor()));
 
-        return text.build();
+        return text;
     }
 
-    public static Text createConfirm(final String message) {
-        return TextBuilder.of(message, "gold").build();
+    public static Component createConfirm(final String message) {
+        return Component.literal(message).withColor(ChatFormatting.GOLD.getColor());
     }
 }

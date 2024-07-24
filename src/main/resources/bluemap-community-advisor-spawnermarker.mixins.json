@@ -3,6 +3,9 @@
   "package": "com.github.electroluxv2.bluemapcommunityadvisor.spawnermarker.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BaseSpawnerAccessor",
+    "CreeperAccessor",
+    "ExplosionAccessor",
     "PlayerEntityMixin"
   ],
   "injectors": {

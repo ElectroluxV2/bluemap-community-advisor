@@ -11,7 +11,7 @@
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/ElectroluxV2/bluemap-community-advisor"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "blue-map-community-advisor-assets/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -24,20 +24,10 @@
 		"bluemap-community-advisor-spawnermarker.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.14.22",
-		"minecraft": "~1.20.1",
-		"java": ">=17",
+		"fabricloader": ">=0.15.11",
+		"minecraft": "~1.21",
+		"java": ">=21",
 		"fabric-api": "*",
-		"bluemap": ">=3.16"
-	},
-	"custom": {
-		"loom:injected_interfaces": {
-			"net/minecraft/class_1548": [
-				"com/github/electroluxv2/bluemapcommunityadvisor/creeperholes/interfaces/CreeperAccessors"
-			],
-			"net/minecraft/class_1927": [
-				"com/github/electroluxv2/bluemapcommunityadvisor/creeperholes/interfaces/ExplosionAccessors"
-			]
-		}
+		"bluemap": ">=5"
 	}
 }

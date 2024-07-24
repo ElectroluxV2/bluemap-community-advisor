@@ -1,8 +1,8 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.spawnermarker.mixin;
 
 import com.github.electroluxv2.bluemapcommunityadvisor.spawnermarker.core.SpawnerMarkerCreator;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public class PlayerEntityMixin {
     @Unique
     private static final int threshold = 5;
@@ -23,7 +23,7 @@ public class PlayerEntityMixin {
         if(tickCounter.incrementAndGet() % threshold != 0) return;
 
         // noinspection ConstantValue
-        if (!((Object) this instanceof ServerPlayerEntity playerEntity)) return;
+        if (!((Object) this instanceof ServerPlayer playerEntity)) return;
 
         SpawnerMarkerCreator.onPlayerTick(playerEntity, threshold);
     }

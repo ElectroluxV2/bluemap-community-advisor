@@ -1,18 +1,18 @@
 package com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core;
 
 import com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.utils.Position;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 import static com.github.electroluxv2.bluemapcommunityadvisor.BlueMapCommunityAdvisor.EXECUTOR;
 import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.TextFactory.createAlternatingProgressBar;
 import static com.github.electroluxv2.bluemapcommunityadvisor.creeperholes.core.TextFactory.createConfirm;
 
 public class ShameHoleRemover {
-    public static void onBlockPlaced(final Position position, final PlayerEntity player) {
+    public static void onBlockPlaced(final Position position, final Player player) {
         EXECUTOR.execute(() -> logic(position, player));
     }
 
-    private static void logic(final Position position, final PlayerEntity player) {
+    private static void logic(final Position position, final Player player) {
         final var markerIdsWithinPosition = ShameHoleDataManager.getMarkerIdsForPosition(position);
         if (markerIdsWithinPosition.isEmpty()) return;
 
@@ -26,14 +26,14 @@ public class ShameHoleRemover {
 
             shameHole.positions().remove(position);
 
-            player.sendMessage(createAlternatingProgressBar(shameHole.positions().size()), true);
+            player.displayClientMessage(createAlternatingProgressBar(shameHole.positions().size()), true);
 
             if (((double) shameHole.originalSize() - shameHole.positions().size()) / shameHole.originalSize() <= 0.8) {
                 ShameHoleDataManager.saveHole(markerId, shameHole);
                 continue;
             }
 
-            player.sendMessage(createConfirm("Fixed hole, marker removed"), true);
+            player.displayClientMessage(createConfirm("Fixed hole, marker removed"), true);
 
             ShameHoleDataManager.deleteHole(markerId);
             ShameHoleMarkerManager.removeShameMarker(markerId);
